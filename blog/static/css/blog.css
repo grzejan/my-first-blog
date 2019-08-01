@@ -47,14 +47,23 @@ h1, h2, h3, h4 {
     float: right;
     font-size: 26pt;
     margin-right: 20px;
+    display: -webkit-flex; /* Safari */
+    -webkit-align-items: center; /* Safari 7.0+ */
+    display: flex;
+    align-items: center;
+    /* border: 1px solid black; */
+}
+
+.top-menu a, .top-menu a:visited {
+    color: #ffffff;    
 }
 
 .post {
     margin-bottom: 70px;
 }
 
-.post h1 a, .post h1 a:visited {
-    color: #000000;
+.post h2 a, .post h2 a:visited {
+    color: #bd4f00;
 }
 
 a:link {
