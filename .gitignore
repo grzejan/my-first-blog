@@ -7,6 +7,7 @@ db.sqlite3
 .DS_Store
 .vscode
 tmp
+mysite/secrets
 blog/static/css/bootstrap_3.2.0_css_bootstrap-theme.min.css
 blog/static/css/bootstrap_3.2.0_css_bootstrap.min.css
 blog/static/css/fonts.googleapis.com_css_family_Lobster.css
