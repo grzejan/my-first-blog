@@ -3,10 +3,10 @@
 {% block content %}
     {% for post in posts %}
         <div class="post">
-            <p class="date right">created: {{ post.created_date|date:'DATETIME_FORMAT' }}
-            by: {{ post.author.username }}</p>
-            <h2><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h2>
+            <h2><a href="{% url 'post_detail' post_id=post.pk %}">{{ post.title }}</a></h2>
             <p>{{ post.text|linebreaksbr|truncatechars:200 }}</p>
+            <p class="date">created: {{ post.created_date|date:'DATETIME_FORMAT' }}
+            by: {{ post.author.username }}</p>
         </div>
     {% endfor %}
 {% endblock %}

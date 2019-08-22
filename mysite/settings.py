@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blog',
+    'social_django',
+    'rules.apps.AutodiscoverRulesConfig',
 ]
 
 MIDDLEWARE = [
@@ -121,4 +123,19 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
+#LOGIN_URL = '/auth/login/google-oauth2/'
+LOGIN_URL = '/accounts/login/'
+
 LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+AUTHENTICATION_BACKENDS = (
+    'rules.permissions.ObjectPermissionBackend',
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY =''  #Paste CLient Key
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '' #Paste Secret Key

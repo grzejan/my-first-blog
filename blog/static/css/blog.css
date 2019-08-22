@@ -67,5 +67,37 @@ h1, h2, h3, h4 {
 }
 
 a:link {
-    text-decoration: underline;
-  }
+    text-decoration: none;
+}
+
+div.osd {
+    position: fixed;
+    float: bottom;
+    bottom: 0;
+    right: 0;
+    max-width: 300px;
+    color: #ffffff;
+  background-color: black;
+  border: 1px solid black;
+  opacity: 0.8;
+  filter: alpha(opacity=80); /* For IE8 and earlier */
+  padding: 0.5rem;
+ 
+  
+  
+}
+
+div.osd0{
+    display: inline;
+    position: absolute;
+    right:0px;
+    top:10px;
+
+    max-width: 300px;
+    color: #ffffff;
+  background-color: black;
+  border: 1px solid white;
+  opacity: 0.8;
+  filter: alpha(opacity=80); /* For IE8 and earlier */
+  padding: 0.5rem;
+}

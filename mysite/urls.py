@@ -17,9 +17,17 @@ from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views
 
-urlpatterns = [
+from django.conf import settings
+from django.contrib.auth import logout
+
+from django.conf.urls.static import static
+
+urlpatterns = [    
     path('admin/', admin.site.urls),
-    path('accounts/login', views.LoginView.as_view(), name='login'),
-    path('accounts/logout', views.LogoutView.as_view(next_page='/'), name='logout'),
+    path('accounts/login/', views.LoginView.as_view(), name='login'),
+    path('accounts/logout/', views.LogoutView.as_view(next_page=settings.LOGOUT_REDIRECT_URL), name='logout'),
+    path('', include('social_django.urls', namespace='social')),
+    # path('accounts/logout/', logout, {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
+    # path('logout/', logout, {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
     path('', include('blog.urls')),
 ]

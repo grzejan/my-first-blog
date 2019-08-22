@@ -1,4 +1,8 @@
 from django.contrib import admin
+from rules.contrib.admin import ObjectPermissionsModelAdmin
 from .models import Post
 
-admin.site.register(Post)
+class PostAdmin(ObjectPermissionsModelAdmin):
+    pass
+
+admin.site.register(Post, PostAdmin)

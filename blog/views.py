@@ -3,14 +3,24 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from .models import Post
 from .forms import PostForm
+# import rules
+# from rules.rulesets import test_rule
+from rules.permissions import has_perm
+# from rules.contrib.views import permission_required
+from django.core.exceptions import PermissionDenied
+
+# def get_post_by_pk(request, post_id):
+#     return get_object_or_404(Post, pk=post_id)
 
 def post_list(request):
     posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
     return render(request, 'blog/post_list.html', {'posts':posts})
 
-def post_detail(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    return render(request, 'blog/post_detail.html', {'post':post})
+def post_detail(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    u = 'Ala makota'
+    author = request.user
+    return render(request, 'blog/post_detail.html', {'post':post, 'author':author})
 
 @login_required
 def post_new(request):
@@ -21,14 +31,19 @@ def post_new(request):
             post.author = request.user
             # post.published_date = timezone.now()
             post.save()
-            return redirect('post_detail', pk=post.pk)
+            return redirect('post_detail', post_id=post.pk)
     else:
         form = PostForm()
     return render(request, 'blog/post_edit.html', {'form':form})
 
 @login_required
-def post_edit(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+# @permission_required('blog.change_post', fn=get_post_by_pk)
+def post_edit(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    # wynik = test_rule('can_edit_post', request.user, post)
+    wynik = has_perm('blog.change_post', request.user, post)
+    if not wynik:
+        raise  PermissionDenied  
     if request.method == "POST":
         # uruchomienie widoku po Save - POST
         form = PostForm(request.POST, instance=post)
@@ -37,7 +52,7 @@ def post_edit(request, pk):
             post.author = request.user
             # post.published_date = timezone.now()
             post.save()
-            return redirect('post_detail', pk=post.pk)
+            return redirect('post_detail', post_id=post.pk)
     else:
         # uruchomienie widoku z urla - GET
         form = PostForm(instance=post)
@@ -49,13 +64,16 @@ def post_draft_list(request):
     return render(request, 'blog/post_draft_list.html', {'posts': posts})
 
 @login_required
-def post_publish(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+def post_publish(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    wynik = has_perm('blog.change_post', request.user, post)
+    if not wynik:
+        raise  PermissionDenied 
     post.publish()
-    return redirect('post_detail', pk=post.pk)
+    return redirect('post_detail', post_id=post.pk)
 
 @login_required
-def post_remove(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+def post_remove(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
     post.delete()
     return redirect('post_list')
