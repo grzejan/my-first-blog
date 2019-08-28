@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-with open('mysite/secrets/secret_key.txt') as f:
+with open(os.path.join(BASE_DIR, 'mysite/secrets/secret_key.txt')) as f:
     SECRET_KEY = f.read().strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -138,8 +138,8 @@ AUTHENTICATION_BACKENDS = (
 
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
-with open('mysite/secrets/social_auth_google_oauth2_key.txt') as f: #Paste CLient Key
+with open(os.path.join(BASE_DIR, 'mysite/secrets/social_auth_google_oauth2_key.txt')) as f: #Paste CLient Key
     SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = f.read().strip()
 
-with open('mysite/secrets/social_auth_google_oauth2_secret.txt') as f: #Paste Secret Key
+with open(os.path.join(BASE_DIR, 'mysite/secrets/social_auth_google_oauth2_secret.txt')) as f: #Paste Secret Key
     SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = f.read().strip()

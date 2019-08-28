@@ -7,7 +7,9 @@ db.sqlite3
 .DS_Store
 .vscode
 tmp
-mysite/secrets
+mysite/secrets/secret_key.txt
+mysite/secrets/social_auth_google_oauth2_key.txt
+mysite/secrets/social_auth_google_oauth2_secret.txt
 blog/static/css/bootstrap_3.2.0_css_bootstrap-theme.min.css
 blog/static/css/bootstrap_3.2.0_css_bootstrap.min.css
 blog/static/css/fonts.googleapis.com_css_family_Lobster.css
