@@ -101,3 +101,7 @@ div.osd0{
   filter: alpha(opacity=80); /* For IE8 and earlier */
   padding: 0.5rem;
 }
+
+.comment {
+    margin: 20px 0px 20px 20px;
+}

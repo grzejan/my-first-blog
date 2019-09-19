@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-from .models import Post
-from .forms import PostForm
+from .models import Post, Comment
+from .forms import PostForm, CommentForm
 # import rules
 # from rules.rulesets import test_rule
 from rules.permissions import has_perm
@@ -77,3 +77,25 @@ def post_remove(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     post.delete()
     return redirect('post_list')
+
+def add_comment_to_post(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            # comment = form.save(commit=False) # dla: forms.ModelForm
+            # comment.post = post 
+            cd = form.cleaned_data # dla: forms.Form
+            comment = Comment(author=cd['author'], text=cd['text'], post=post) # koniec dla: forms.Form
+            comment.save()
+            request.session['username'] = comment.author
+            return redirect('post_detail', post_id=post.pk)
+    else:
+        # value_true if <test> else value_false
+        # u = request.user.username if request.user.username else 'gosc'        
+        username = ""
+        if request.session.has_key('username'):
+            username = request.session['username']
+        u = request.user.username or username or 'gosc'
+        form = CommentForm(initial={'author':u})
+    return render(request, 'blog/add_comment_to_post.html', {'form': form})

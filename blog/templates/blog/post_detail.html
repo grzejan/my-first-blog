@@ -31,7 +31,18 @@
         <p>{{ post.text|linebreaksbr }}</p>
     </div>
 
+<a class="btn btn-default" href="{% url 'add_comment_to_post' post_id=post.pk %}">Add comment</a>
+{% for comment in post.comments.all|dictsortreversed:"created_date" %}
+    <div class="comment">
+        <div class="date">{{ comment.created_date }}</div>
+        <strong>{{ comment.author }}</strong>
+        <p>{{ comment.text|linebreaks }}</p>
+    </div>
+{% empty %}
+    <p>No comments here yet :(</p>
+{% endfor %}
 {% endblock%}
+
 {% block osd %}
 {% load rules %}
 {% test_rule 'can_edit_post' user post as can_edit_post %}
@@ -44,5 +55,4 @@
         blog.change_post: {{ perm_change_post }}<br>
         blog.delete_post: {{ perm_delete_post }}
     </small>
-
-    {% endblock%}
+{% endblock%}
