@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link href="https://fonts.googleapis.com/css?family=Luckiest+Guy&display=swap" rel="stylesheet"> 
+<style>
+.font1 {font-family: 'Luckiest Guy', cursive;}
+</style>
+</head>
+<body class="w3-container">
+
+{% if user.is_authenticated %}
+  Logged user: {{ user.username }} (<a href="{% url 'logout' %}" >Logout</a>)               
+{% else %}
+  Logged user: none (<a href="{% url 'login' %}" >Login</a>)
+{% endif %}
+
+
+<div class="w3-container">
+    <h2>Site menu</h2>
+    <ul>
+    <li><a href="/blog/" >grzejan blog</a>
+    <li><a href="echo/?a=111&b=ala%20mak%20ota&c=232">echo/?a=111&b=ala mak ota&c=232</a>
+    </ul>
+</div>
+
+<div class="w3-container">
+    <h2>Site menu (dynamic)</h2>    
+    <ul>
+    {% for uri in uris %}
+        <li><a href="{{uri.1}}" >{{uri.0}}</a>
+    {% endfor %}
+    </ul>
+</div>
+
+
+
+<div class="  w3-mobile " style="display: inline-block;">
+<div class="w3-card-2  w3-margin-right  w3-hover-shadow" style="width:220px">  
+  <div class=" w3-center  w3-padding w3-margin">   
+  <div class="w3-display-container w3-margin-top w3-badge w3-padding w3-green font1 w3-xlarge " style="width: 125px;height: 125px;border-radius: 50%;vertical-align: middle;text-align:center;">
+  <div class="w3-display-middle">Level 1</div>
+  </div>
+  <h4><b>Steps: 343</b></h4><p >Time: 1 min 23 sec</p></div>
+</div>
+</div>
+
+
+<div class="  w3-mobile " style="display: inline-block;">
+<div class="w3-card-2  w3-margin-right w3-hover-shadow" style="width:220px">  
+  <div class=" w3-center w3-padding w3-margin">   
+  <div class="w3-display-container w3-margin-top w3-badge w3-padding w3-pink font1 w3-xlarge " style="width: 125px;height: 125px;border-radius: 50%;vertical-align: middle;text-align:center;">
+  <div class="w3-display-middle">Level 2</div>
+  </div> 
+    <h4><b>Steps: ???</b></h4> 
+    <p>Time: ???</p> 
+  </div>
+</div>
+</div>
+
+
+<div class="  w3-mobile " style="display: inline-block;">
+<div class="w3-card-2  w3-margin-right w3-opacity-max w3-grayscale-max" style="width:220px">  
+  <div class=" w3-center w3-padding w3-margin">   
+  <div class="w3-display-container w3-margin-top w3-badge w3-padding w3-pink font1 w3-xlarge " style="width: 125px;height: 125px;border-radius: 50%;vertical-align: middle;text-align:center;">
+  <div class="w3-display-middle">Level 3</div>
+  </div> 
+    <h4><b>Steps: ???</b></h4> 
+    <p>Time: ???</p> 
+  </div>
+</div>
+</div>
+
+<span id="demo"></span>
+
+<script>
+var text = "";
+var i;
+for (i = 4; i < 205; i++) {
+  text += '<div class="  w3-mobile" style="display: inline-block;"><div class="w3-card-2  w3-margin-right w3-opacity-max w3-grayscale-max" style="width:220px">    <div class=" w3-center w3-padding  w3-margin">     <div class="w3-display-container w3-margin-top w3-badge w3-padding w3-pink font1 w3-xlarge " style="width: 125px;height: 125px;border-radius: 50%;vertical-align: middle;text-align:center;">  <div class="w3-display-middle">Level '+i+'</div>  </div>     <h4><b>Steps: ???</b></h4>     <p>Time: ???</p>   </div></div></div>';
+}
+document.getElementById("demo").innerHTML = text;
+</script>
+
+</div>
+
+</body>
+</html> 

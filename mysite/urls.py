@@ -30,4 +30,6 @@ urlpatterns = [
     # path('accounts/logout/', logout, {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
     # path('logout/', logout, {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
     path('', include('blog.urls')),
+    path('', include('menu.urls')),
+    path('', include('starpusher.urls')),
 ]

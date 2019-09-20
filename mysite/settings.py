@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'blog',
     'social_django',
     'rules.apps.AutodiscoverRulesConfig',
+    'menu',
+    'starpusher',
 ]
 
 MIDDLEWARE = [
@@ -127,8 +129,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 #LOGIN_URL = '/auth/login/google-oauth2/'
 LOGIN_URL = '/accounts/login/'
 
-LOGIN_REDIRECT_URL = '/blog/'
-LOGOUT_REDIRECT_URL = '/blog/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 
 AUTHENTICATION_BACKENDS = (
     'rules.permissions.ObjectPermissionBackend',

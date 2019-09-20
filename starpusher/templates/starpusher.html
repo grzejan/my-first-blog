@@ -1,0 +1,103 @@
+{% load static %}
+<html>
+<head>
+<!--<link href="https://fonts.googleapis.com/css?family=Anton|Barriecito|Bungee|Luckiest+Guy|Saira+Stencil+One|Squada+One|Wendy+One&display=swap" rel="stylesheet">
+-->
+<link href="https://fonts.googleapis.com/css?family=Luckiest+Guy|Wendy+One&display=swap" rel="stylesheet"> 
+<style>
+.fontWendy {font-family: 'Wendy One', serif;}
+.fontAnton {font-family: 'Anton', serif;}
+.fontBarriecito {font-family: 'Barriecito', serif;}
+.fontBungee {font-family: 'Bungee', serif;}
+.fontLGuy {font-family: 'Luckiest Guy', serif;}
+.fontSaira {font-family: 'Saira Stencil One', serif;}
+.fontSquada {font-family: 'Squada One', serif;}
+.fontDecoration {
+  font-size: 24px;  
+  color:white;
+  text-shadow:       
+     -1px -1px 0 #000,  
+      1px -1px 0 #000,
+      -1px 1px 0 #000,
+       1px 1px 0 #000, 
+      4px 4px 4px #888;
+}
+.fontDecoration2 {
+  font-size: 24px;  
+  color:#f0efef;
+  text-shadow:       
+     -1px -1px 0 #000,  
+      1px -1px 0 #000,
+      -1px 1px 0 #000,
+      1px 1px 0 #000, 
+      6px 5px 4px #333;
+}
+div.up {
+  margin-top: -45px;
+  white-space:nowrap;
+}
+div.tile {
+  display:inline;
+}
+div.over {
+  margin-left: -50px;
+}
+img.over {
+  margin-left: -50px;
+}
+0img {
+  margin-left: -4px;
+}
+#board {
+    position: relative;
+    align:center;
+    background: rgb(0,170,255);
+    padding: 20px;
+    padding-top: 80px;
+    text-align: center;
+    border: 40px 0 0 0;
+}
+body {
+  background: rgb(0,170,255);
+}
+.blueback {
+  background: rgb(0,170,255);
+}
+div.inner {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    padding: 2rem;
+}
+
+</style>
+</head>
+<body>
+<script type="module">import * as starpusher from "{% static "__target__/starpusher.js" %}"; window.starpusher = starpusher;</script>
+<div id="info" class="fontDecoration fontWendy blueback">
+Push the stars over the marks. 
+P to change character.
+Backspace to reset level, Esc to quit.
+N for next level, B to go back a level.
+Arrow keys to move. U for undo.</div>
+<div id="board"></div>
+<img style="" src="{% static "pic/RedSelector.png" %}">
+<img style="" src="{% static "pic/Selector.png" %}">
+<img style="" src="{% static "pic/Star.png" %}">
+<img style="display:none" src="{% static "pic/Wall_Block_Tall.png" %}">
+<img style="display:none" src="{% static "pic/Wood_Block_Tall.png" %}">
+<img style="display:none" src="{% static "pic/Plain_Block.png" %}">
+<img style="display:none" src="{% static "pic/Grass_Block.png" %}">
+<img style="display:none" src="{% static "pic/star_title.png" %}">
+<img style="display:none" src="{% static "pic/star_solved.png" %}">
+<img style="display:none" src="{% static "pic/princess.png" %}">
+<img style="display:none" src="{% static "pic/boy.png" %}">
+<img style="display:none" src="{% static "pic/catgirl.png" %}">
+<img style="display:none" src="{% static "pic/horngirl.png" %}">
+<img style="display:none" src="{% static "pic/pinkgirl.png" %}">
+<img style="display:none" src="{% static "pic/Rock.png" %}">
+<img style="display:none" src="{% static "pic/Tree_Short.png" %}">
+<img style="display:none" src="{% static "pic/Tree_Tall.png" %}">
+<img style="display:none" src="{% static "pic/Tree_Ugly.png" %}">
+</body>
+</html>

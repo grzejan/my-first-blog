@@ -21,8 +21,8 @@
         <div class="page-header">
             <div class="top-menu">
             {% if user.is_authenticated %}
-                Hi {{ user.username }}(<a href="{% url 'logout' %}" ><span class="glyphicon glyphicon-log-out" data-toggle="tooltip" data-placement="bottom" title="Logout"></span></a>)&nbsp
-                <a href="{% url 'post_draft_list' %}" class="0top-menu"><span class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="bottom" title="Drafts"></span></a>&nbsp
+                Hi {{ user.username }}(<a href="{% url 'logout' %}" ><span class="glyphicon glyphicon-log-out" data-toggle="tooltip" data-placement="bottom" title="Logout"></span></a>)&nbsp;
+                <a href="{% url 'post_draft_list' %}" class="0top-menu"><span class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="bottom" title="Drafts"></span></a>&nbsp;
                 <a href="{% url 'post_new' %}" class="0top-menu"><span class="glyphicon glyphicon-plus" data-toggle="tooltip" data-placement="bottom" title="Add post"></span></a>
             {% else %}
                 <a href="{% url 'login' %}" class="0top-menu"><span class="glyphicon glyphicon-log-in" data-toggle="tooltip" data-placement="bottom" title="Login"></span></a>
@@ -44,6 +44,7 @@
         </div>
         <div class="osd">        
             <small style="color: #ffffff;"> 
+                csrf_token: {{ csrf_token }}<br>
                 {% if user.username %}username: {{ user.username }}<br>{% endif %}
                 {% if user.first_name%}first_name: {{ user.first_name }} <br> {% endif %}
                 {% if user.last_name%}last_name: {{ user.last_name }} <br> {% endif %}
