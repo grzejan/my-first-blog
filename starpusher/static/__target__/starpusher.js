@@ -1,4 +1,4 @@
-// Transcrypt'ed from Python, 2019-09-20 18:53:32
+// Transcrypt'ed from Python, 2019-09-20 19:42:48
 var random = {};
 var sys = {};
 var time = {};
@@ -60,7 +60,7 @@ export var Starpusher =  __class__ ('Starpusher', [object], {
 		win.addEventListener ('keydown', self.keydown);
 		win.addEventListener ('keyup', self.keyup);
 		win.setInterval (self.py_update, 1500);
-		self.levels = self.readLevelsFile ('http://127.0.0.1:8000/static/starPusherLevels.txt');
+		self.levels = self.readLevelsFile ('/static/starPusherLevels.txt');
 		print ('Levels:' + len (self.levels));
 		self.board = html.getElementById ('board');
 		self.timeStart = time.time ();

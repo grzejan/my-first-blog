@@ -16,17 +16,8 @@
   Logged user: none (<a href="{% url 'login' %}" >Login</a>)
 {% endif %}
 
-
 <div class="w3-container">
-    <h2>Site menu</h2>
-    <ul>
-    <li><a href="/blog/" >grzejan blog</a>
-    <li><a href="echo/?a=111&b=ala%20mak%20ota&c=232">echo/?a=111&b=ala mak ota&c=232</a>
-    </ul>
-</div>
-
-<div class="w3-container">
-    <h2>Site menu (dynamic)</h2>    
+    <h2>Site menu</h2>    
     <ul>
     {% for uri in uris %}
         <li><a href="{{uri.1}}" >{{uri.0}}</a>

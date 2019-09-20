@@ -95,7 +95,7 @@ class Starpusher:
         win.addEventListener ('keyup', self.keyup)
         win.setInterval (self.update, 1500)    # Install update callback, time in ms
         
-        self.levels = self.readLevelsFile('http://127.0.0.1:8000/static/starPusherLevels.txt')
+        self.levels = self.readLevelsFile('/static/starPusherLevels.txt')
         print("Levels:"+len(self.levels))
 
        

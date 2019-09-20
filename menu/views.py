@@ -7,6 +7,7 @@ def item_list(request):
     uris=[]
     uris.append(['grzejan blog', '/blog/'])
     uris.append(['echo (a=111, b=ala mak ota, c=232)', '/echo/?a=111&b=ala mak ota&c=232'])
+    uris.append(['Starpusher', '/starpusher/'])
     return render(request, 'menu/item_list.html', {'uris':uris})
 
 @csrf_exempt
