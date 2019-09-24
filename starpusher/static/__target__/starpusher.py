@@ -8,10 +8,10 @@ window.onkeydown = lambda event: event.keyCode != up and event.keyCode != down a
 KEYMAPPING = {13:"enter",27:"esc",32:"space",37:"left",38:"up",39:"right",40:"down",85:"u",78:"n",66:"b",80:"p"}
 
 # IMAGESDICT = {
-#     'grass':'<img src="pic/Grass_Block.png">',
-#     'plain':'<img src="pic/Plain_Block.png">',
-#     'wall':'<img src="pic/Wall_Block_Tall.png">',
-#     'wood':'<img src="pic/Wood_Block_Tall.png">'
+#     'grass':'<img src="/static/pic/Grass_Block.png">',
+#     'plain':'<img src="/static/pic/Plain_Block.png">',
+#     'wall':'<img src="/static/pic/Wall_Block_Tall.png">',
+#     'wood':'<img src="/static/pic/Wood_Block_Tall.png">'
 # }
 
 IMAGESDICT = {'uncovered goal': '<img class="over" src="/static/pic/RedSelector.png">',
@@ -65,6 +65,7 @@ class Starpusher:
         self.timeStart = time.time()
         self.currentImage=0
         self.tile=[]
+        self.jsMoveEvents=[]
         
         self.container = html.createElement('div')
         self.container.style.backgroundColor = 'Silver'
@@ -93,12 +94,13 @@ class Starpusher:
         
         win.addEventListener ('keydown', self.keydown)
         win.addEventListener ('keyup', self.keyup)
-        win.setInterval (self.update, 1500)    # Install update callback, time in ms
-        
+        html.body.addEventListener ('touchstart', lambda event: event.preventDefault ())
+        html.body.addEventListener ('mousedown', lambda event: event.preventDefault ())
+        # win.setInterval (self.update, 1500)    # Install update callback, time in ms
+
         self.levels = self.readLevelsFile('/static/starPusherLevels.txt')
         print("Levels:"+len(self.levels))
-
-       
+        
         # self.levelObj = self.levels[self.currentLevelIndex]
         # self.mapObj = self.decorateMap(self.levelObj['mapObj'], self.levelObj['startState']['player'])
         # self.boxes[4].innerHTML=str(self.mapObj)
@@ -126,6 +128,9 @@ class Starpusher:
         # # self.container.appendChild (self.board)
         # html.body.appendChild (self.board)
         self.board = html.getElementById ('board')
+        self.endSplash = html.getElementById ('endSplash')
+        self.endSplash.addEventListener ('touchstart', (lambda aCell: lambda: self.mouseClick (aCell)) (('next', -1, -1)))  # Returns inner lambda
+        self.endSplash.addEventListener ('mousedown', (lambda aCell: lambda: self.mouseClick (aCell)) (('next', -1, -1)))
         # self.board.style.margin = '80px 0 0 40px' # top right bottom left
         # self.board.innerHTML=mapSurf
         self.timeStart = time.time()
@@ -148,8 +153,9 @@ class Starpusher:
         self.gameStateObj.stars=self.levelObj['startState'].stars
         self.gameStateObj.playerUndo=self.levelObj['startState'].playerUndo
         self.gameStateObj.starsUndo=self.levelObj['startState'].starsUndo
-        self.tile=[]
+        self.tile.clear()
         self.board.innerHTML=""
+        self.endSplash.style.display = 'none'
         # print("mapObj:"+str(self.mapObj))
         for y in range(len(self.mapObj)):
             self.tile.append([])
@@ -164,7 +170,71 @@ class Starpusher:
         # self.board.innerHTML=mapSurf
         self.timeStart = time.time()
     
+    def mouseClick(self, params):
+        ev, x, y = params
+        playerY, playerX = self.gameStateObj.player
+        print('mouseClick: '+str((ev, x, y)))
+        print('mouseClick-self.gameStateObj.player: '+str(self.gameStateObj.player))        
+        # print(str(cell.innerHTML))
+        gameEvent=''        
+        PAUSE_MS=200
+        if (ev=='next'):            
+            gameEvent=self.handleUserAction('next')
+        elif (ev=='u'):
+            # undo
+            self.gameStateObj['player'] = self.gameStateObj['playerUndo'].pop()
+            self.gameStateObj['stars'] = self.gameStateObj['starsUndo'].pop()
+            # redraw map
+            mapSurf = self.updateMap(self.mapObj, self.gameStateObj, self.levelObj['goals'])           
+        elif (playerX==x and playerY==y):            
+            gameEvent=self.handleUserAction('p')
+        elif (playerY==y):
+            if(playerX>x):
+                t=0
+                while (x < playerX) and (gameEvent!='levelCompleted'):
+                    # gameEvent=self.handleUserAction('left')
+                    self.jsMoveEvents.append(win.setTimeout((lambda gameEvent: lambda: self.handleUserAction (gameEvent)) ('left'), t))
+                    t+=PAUSE_MS
+                    x += 1
+            elif(playerX<x):
+                t=0
+                while (x > playerX) and (gameEvent!='levelCompleted'):
+                    # gameEvent=self.handleUserAction('right')
+                    self.jsMoveEvents.append(win.setTimeout((lambda gameEvent: lambda: self.handleUserAction (gameEvent)) ('right'), t))
+                    t+=PAUSE_MS
+                    x -= 1
+        elif (playerX==x):
+            if(playerY>y):
+                t=0
+                while (y < playerY) and (gameEvent!='levelCompleted'):
+                    # gameEvent=self.handleUserAction('up')
+                    self.jsMoveEvents.append(win.setTimeout((lambda gameEvent: lambda: self.handleUserAction (gameEvent)) ('up'), t))
+                    t+=PAUSE_MS
+                    y += 1
+            elif(playerY<y):
+                t=0
+                while (y > playerY) and (gameEvent!='levelCompleted'):
+                    # gameEvent=self.handleUserAction('down')
+                    self.jsMoveEvents.append(win.setTimeout((lambda gameEvent: lambda: self.handleUserAction (gameEvent)) ('down'), t))
+                    t+=PAUSE_MS
+                    y -= 1
+
     def keydown (self, event):
+        self.keyCode = event.keyCode        
+        if (self.isLevelFinished(self.levelObj, self.gameStateObj) or KEYMAPPING[self.keyCode]=='n'):
+            gameEvent=self.handleUserAction('next')    
+        elif (KEYMAPPING[self.keyCode]=='b'):
+            self.currentLevelIndex -= 1
+            self.initLevel(self.currentLevelIndex)
+        elif (KEYMAPPING[self.keyCode]=='p'):
+            gameEvent=self.handleUserAction('p')
+        elif (KEYMAPPING[self.keyCode] in ['up','left','down','right']):       
+            gameEvent=self.handleUserAction(KEYMAPPING[self.keyCode])
+        elif (KEYMAPPING[self.keyCode]=='u' and len(self.gameStateObj['playerUndo'])>0):
+            gameEvent=self.handleUserAction('u')
+     
+    
+    def keydown0 (self, event):
         self.keyCode = event.keyCode
         # print('keycode:'+self.keyCode)
         self.boxes[1].innerHTML="Klawisz: "+self.keyCode+" - "+KEYMAPPING[self.keyCode]
@@ -207,10 +277,64 @@ class Starpusher:
             # redraw map
             mapSurf = self.updateMap(self.mapObj, self.gameStateObj, self.levelObj['goals'])
             # self.board.innerHTML=mapSurf
-     
+
     def keyup (self, event):
         self.keyCode = None 
-
+    
+    def handleUserAction (self, userAction):
+        if ((userAction=='next') or userAction=='n'):
+            #self.isLevelFinished(self.levelObj, self.gameStateObj) and 
+            for moveEvent in self.jsMoveEvents:
+                win.clearInterval(moveEvent)
+            self.jsMoveEvents.clear()
+            self.currentLevelIndex += 1
+            self.initLevel(self.currentLevelIndex)
+            #self.isLevelcomplete=False        
+        elif (userAction=='b'):
+            self.currentLevelIndex -= 1
+            self.initLevel(self.currentLevelIndex)
+        elif (userAction=='p'):
+            # Change the player image to the next one.
+            self.currentImage += 1
+            if (self.currentImage >= len(PLAYERIMAGES)):
+                # After the last player image, use the first one.
+                self.currentImage = 0
+            mapSurf = self.updateMap(self.mapObj, self.gameStateObj, self.levelObj['goals'])
+            return 'characterChanged'
+        elif ((userAction in ['up','left','down','right']) and (not self.isLevelFinished(self.levelObj, self.gameStateObj))):       
+            moved = self.makeMove(self.mapObj, self.gameStateObj, userAction)
+            if (moved):
+                # redraw map                
+                mapSurf = self.updateMap(self.mapObj, self.gameStateObj, self.levelObj['goals'])
+                # self.board.innerHTML=mapSurf
+                # stepcounter
+                self.gameStateObj['stepCounter'] += 1
+                self.gameStateObj['timeCounter'] = int(time.time() - self.timeStart)
+                if (self.isLevelFinished(self.levelObj, self.gameStateObj)):
+                    m, s = divmod(self.gameStateObj['timeCounter'], 60)
+                    timeCounterMsg = s+' sec' if m==0 else m+' min '+s+' sec'                   
+                    # self.board.innerHTML+='<div class="inner"><img src="/static/pic/star_solved.png"><div style="margin:10px;" class="fontDecoration2 fontLGuy">Steps: '+self.gameStateObj['stepCounter']+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Time: '+timeCounterMsg+'</div></div>'
+                    # endSplash = html.createElement('div')
+                    # endSplash.className='inner'
+                    # self.board.appendChild (endSplash)
+                    # endSplash.addEventListener ('touchstart', (lambda aCell: lambda: self.mouseClick (aCell)) (('next', -1, -1)))  # Returns inner lambda
+                    # endSplash.addEventListener ('mousedown', (lambda aCell: lambda: self.mouseClick (aCell)) (('next', -1, -1)))
+                    # self.endSplash.innerHTML='<img src="/static/pic/star_solved.png"><div style="margin:10px;text-align:center;" class="fontDecoration2 fontLGuy">Steps: '+self.gameStateObj['stepCounter']+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Time: '+timeCounterMsg+'</div>'
+                    counter = html.getElementById('counter')
+                    counter.innerHTML='Steps: '+self.gameStateObj['stepCounter']+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Time: '+timeCounterMsg
+                    self.endSplash.style.display = 'initial'
+                    return 'levelCompleted'
+                return 'moved'
+        elif (userAction=='u' and len(self.gameStateObj['playerUndo'])>0):
+            # undo
+            self.gameStateObj['player'] = self.gameStateObj['playerUndo'].pop()
+            self.gameStateObj['stars'] = self.gameStateObj['starsUndo'].pop()
+            # redraw map
+            mapSurf = self.updateMap(self.mapObj, self.gameStateObj, self.levelObj['goals'])
+            # self.board.innerHTML=mapSurf
+            return 'undo'
+        return 'none'
+     
     def update (self):
         self.boxes[0].innerHTML="Random: " + random.randint (1, 100)
     
@@ -429,6 +553,9 @@ class Starpusher:
             self.board.appendChild (row)
             # self.box.innerHTML='box'
             # self.boxes.append(self.box)
+            rowTouch = html.createElement('div')
+            rowTouch.className='touch-up'
+            self.board.appendChild (rowTouch)
             
             for y in range(len(mapObj[x])):
                 cellInner=""
@@ -445,6 +572,15 @@ class Starpusher:
                 cell = html.createElement('span')
                 row.appendChild (cell)
                 self.tile[x][y]=cell
+                cellTouch = html.createElement('div')
+                if (mapObj[x][y]=='o'):
+                    cellTouch.className='touch'
+                    cellTouch.addEventListener ('touchstart', (lambda aCell: lambda: self.mouseClick (aCell)) (('board', y, x)))  # Returns inner lambda
+                    cellTouch.addEventListener ('mousedown', (lambda aCell: lambda: self.mouseClick (aCell)) (('board', y, x)))
+                else:
+                    cellTouch.className='notouch'
+
+                rowTouch.appendChild (cellTouch)
 
                 if mapObj[x][y] in OUTSIDEDECOMAPPING:
                     # Draw any tree/rock decorations that are on this tile.
@@ -547,9 +683,6 @@ class Starpusher:
 
 
         return "mapSurf"
-
-
-
 
     def makeMove(self, mapObj, gameStateObj, playerMoveTo):
         """Given a map and game state object, see if it is possible for the

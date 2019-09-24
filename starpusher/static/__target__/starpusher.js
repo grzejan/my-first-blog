@@ -1,4 +1,4 @@
-// Transcrypt'ed from Python, 2019-09-20 19:42:48
+// Transcrypt'ed from Python, 2019-09-24 21:57:46
 var random = {};
 var sys = {};
 var time = {};
@@ -36,6 +36,7 @@ export var Starpusher =  __class__ ('Starpusher', [object], {
 		self.timeStart = time.time ();
 		self.currentImage = 0;
 		self.tile = [];
+		self.jsMoveEvents = [];
 		self.container = html.createElement ('div');
 		self.container.style.backgroundColor = 'Silver';
 		self.container.style.height = 'auto';
@@ -59,10 +60,26 @@ export var Starpusher =  __class__ ('Starpusher', [object], {
 		self.keyCode = null;
 		win.addEventListener ('keydown', self.keydown);
 		win.addEventListener ('keyup', self.keyup);
-		win.setInterval (self.py_update, 1500);
+		html.body.addEventListener ('touchstart', (function __lambda__ (event) {
+			return event.preventDefault ();
+		}));
+		html.body.addEventListener ('mousedown', (function __lambda__ (event) {
+			return event.preventDefault ();
+		}));
 		self.levels = self.readLevelsFile ('/static/starPusherLevels.txt');
 		print ('Levels:' + len (self.levels));
 		self.board = html.getElementById ('board');
+		self.endSplash = html.getElementById ('endSplash');
+		self.endSplash.addEventListener ('touchstart', (function __lambda__ (aCell) {
+			return (function __lambda__ () {
+				return self.mouseClick (aCell);
+			});
+		}) (tuple (['next', -(1), -(1)])));
+		self.endSplash.addEventListener ('mousedown', (function __lambda__ (aCell) {
+			return (function __lambda__ () {
+				return self.mouseClick (aCell);
+			});
+		}) (tuple (['next', -(1), -(1)])));
 		self.timeStart = time.time ();
 		self.boardInfo = html.getElementById ('info');
 		self.currentLevelIndex = 0;
@@ -78,8 +95,9 @@ export var Starpusher =  __class__ ('Starpusher', [object], {
 		self.gameStateObj.stars = self.levelObj ['startState'].stars;
 		self.gameStateObj.playerUndo = self.levelObj ['startState'].playerUndo;
 		self.gameStateObj.starsUndo = self.levelObj ['startState'].starsUndo;
-		self.tile = [];
+		self.tile.py_clear ();
 		self.board.innerHTML = '';
+		self.endSplash.style.display = 'none';
 		for (var y = 0; y < len (self.mapObj); y++) {
 			self.tile.append ([]);
 		}
@@ -91,7 +109,102 @@ export var Starpusher =  __class__ ('Starpusher', [object], {
 		var mapSurf = self.drawMap (self.mapObj, self.gameStateObj, self.levelObj ['goals']);
 		self.timeStart = time.time ();
 	});},
+	get mouseClick () {return __get__ (this, function (self, params) {
+		var __left0__ = params;
+		var ev = __left0__ [0];
+		var x = __left0__ [1];
+		var y = __left0__ [2];
+		var __left0__ = self.gameStateObj.player;
+		var playerY = __left0__ [0];
+		var playerX = __left0__ [1];
+		print ('mouseClick: ' + str (tuple ([ev, x, y])));
+		print ('mouseClick-self.gameStateObj.player: ' + str (self.gameStateObj.player));
+		var gameEvent = '';
+		var PAUSE_MS = 200;
+		if (ev == 'next') {
+			var gameEvent = self.handleUserAction ('next');
+		}
+		else if (ev == 'u') {
+			self.gameStateObj ['player'] = self.gameStateObj ['playerUndo'].py_pop ();
+			self.gameStateObj ['stars'] = self.gameStateObj ['starsUndo'].py_pop ();
+			var mapSurf = self.updateMap (self.mapObj, self.gameStateObj, self.levelObj ['goals']);
+		}
+		else if (playerX == x && playerY == y) {
+			var gameEvent = self.handleUserAction ('p');
+		}
+		else if (playerY == y) {
+			if (playerX > x) {
+				var t = 0;
+				while (x < playerX && gameEvent != 'levelCompleted') {
+					self.jsMoveEvents.append (win.setTimeout ((function __lambda__ (gameEvent) {
+						return (function __lambda__ () {
+							return self.handleUserAction (gameEvent);
+						});
+					}) ('left'), t));
+					t += PAUSE_MS;
+					x++;
+				}
+			}
+			else if (playerX < x) {
+				var t = 0;
+				while (x > playerX && gameEvent != 'levelCompleted') {
+					self.jsMoveEvents.append (win.setTimeout ((function __lambda__ (gameEvent) {
+						return (function __lambda__ () {
+							return self.handleUserAction (gameEvent);
+						});
+					}) ('right'), t));
+					t += PAUSE_MS;
+					x--;
+				}
+			}
+		}
+		else if (playerX == x) {
+			if (playerY > y) {
+				var t = 0;
+				while (y < playerY && gameEvent != 'levelCompleted') {
+					self.jsMoveEvents.append (win.setTimeout ((function __lambda__ (gameEvent) {
+						return (function __lambda__ () {
+							return self.handleUserAction (gameEvent);
+						});
+					}) ('up'), t));
+					t += PAUSE_MS;
+					y++;
+				}
+			}
+			else if (playerY < y) {
+				var t = 0;
+				while (y > playerY && gameEvent != 'levelCompleted') {
+					self.jsMoveEvents.append (win.setTimeout ((function __lambda__ (gameEvent) {
+						return (function __lambda__ () {
+							return self.handleUserAction (gameEvent);
+						});
+					}) ('down'), t));
+					t += PAUSE_MS;
+					y--;
+				}
+			}
+		}
+	});},
 	get keydown () {return __get__ (this, function (self, event) {
+		self.keyCode = event.keyCode;
+		if (self.isLevelFinished (self.levelObj, self.gameStateObj) || KEYMAPPING [self.keyCode] == 'n') {
+			var gameEvent = self.handleUserAction ('next');
+		}
+		else if (KEYMAPPING [self.keyCode] == 'b') {
+			self.currentLevelIndex--;
+			self.initLevel (self.currentLevelIndex);
+		}
+		else if (KEYMAPPING [self.keyCode] == 'p') {
+			var gameEvent = self.handleUserAction ('p');
+		}
+		else if (__in__ (KEYMAPPING [self.keyCode], ['up', 'left', 'down', 'right'])) {
+			var gameEvent = self.handleUserAction (KEYMAPPING [self.keyCode]);
+		}
+		else if (KEYMAPPING [self.keyCode] == 'u' && len (self.gameStateObj ['playerUndo']) > 0) {
+			var gameEvent = self.handleUserAction ('u');
+		}
+	});},
+	get keydown0 () {return __get__ (this, function (self, event) {
 		self.keyCode = event.keyCode;
 		self.boxes [1].innerHTML = (('Klawisz: ' + self.keyCode) + ' - ') + KEYMAPPING [self.keyCode];
 		self.tileUpdate (KEYMAPPING [self.keyCode]);
@@ -133,6 +246,54 @@ export var Starpusher =  __class__ ('Starpusher', [object], {
 	});},
 	get keyup () {return __get__ (this, function (self, event) {
 		self.keyCode = null;
+	});},
+	get handleUserAction () {return __get__ (this, function (self, userAction) {
+		if (userAction == 'next' || userAction == 'n') {
+			for (var moveEvent of self.jsMoveEvents) {
+				win.clearInterval (moveEvent);
+			}
+			self.jsMoveEvents.py_clear ();
+			self.currentLevelIndex++;
+			self.initLevel (self.currentLevelIndex);
+		}
+		else if (userAction == 'b') {
+			self.currentLevelIndex--;
+			self.initLevel (self.currentLevelIndex);
+		}
+		else if (userAction == 'p') {
+			self.currentImage++;
+			if (self.currentImage >= len (PLAYERIMAGES)) {
+				self.currentImage = 0;
+			}
+			var mapSurf = self.updateMap (self.mapObj, self.gameStateObj, self.levelObj ['goals']);
+			return 'characterChanged';
+		}
+		else if (__in__ (userAction, ['up', 'left', 'down', 'right']) && !(self.isLevelFinished (self.levelObj, self.gameStateObj))) {
+			var moved = self.makeMove (self.mapObj, self.gameStateObj, userAction);
+			if (moved) {
+				var mapSurf = self.updateMap (self.mapObj, self.gameStateObj, self.levelObj ['goals']);
+				self.gameStateObj ['stepCounter']++;
+				self.gameStateObj ['timeCounter'] = int (time.time () - self.timeStart);
+				if (self.isLevelFinished (self.levelObj, self.gameStateObj)) {
+					var __left0__ = divmod (self.gameStateObj ['timeCounter'], 60);
+					var m = __left0__ [0];
+					var s = __left0__ [1];
+					var timeCounterMsg = (m == 0 ? s + ' sec' : ((m + ' min ') + s) + ' sec');
+					var counter = html.getElementById ('counter');
+					counter.innerHTML = (('Steps: ' + self.gameStateObj ['stepCounter']) + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Time: ') + timeCounterMsg;
+					self.endSplash.style.display = 'initial';
+					return 'levelCompleted';
+				}
+				return 'moved';
+			}
+		}
+		else if (userAction == 'u' && len (self.gameStateObj ['playerUndo']) > 0) {
+			self.gameStateObj ['player'] = self.gameStateObj ['playerUndo'].py_pop ();
+			self.gameStateObj ['stars'] = self.gameStateObj ['starsUndo'].py_pop ();
+			var mapSurf = self.updateMap (self.mapObj, self.gameStateObj, self.levelObj ['goals']);
+			return 'undo';
+		}
+		return 'none';
 	});},
 	get py_update () {return __get__ (this, function (self) {
 		self.boxes [0].innerHTML = 'Random: ' + random.randint (1, 100);
@@ -276,6 +437,9 @@ export var Starpusher =  __class__ ('Starpusher', [object], {
 			var row = html.createElement ('div');
 			row.className = 'up';
 			self.board.appendChild (row);
+			var rowTouch = html.createElement ('div');
+			rowTouch.className = 'touch-up';
+			self.board.appendChild (rowTouch);
 			for (var y = 0; y < len (mapObj [x]); y++) {
 				var cellInner = '';
 				if (__in__ (mapObj [x] [y], TILEMAPPING)) {
@@ -289,6 +453,24 @@ export var Starpusher =  __class__ ('Starpusher', [object], {
 				var cell = html.createElement ('span');
 				row.appendChild (cell);
 				self.tile [x] [y] = cell;
+				var cellTouch = html.createElement ('div');
+				if (mapObj [x] [y] == 'o') {
+					cellTouch.className = 'touch';
+					cellTouch.addEventListener ('touchstart', (function __lambda__ (aCell) {
+						return (function __lambda__ () {
+							return self.mouseClick (aCell);
+						});
+					}) (tuple (['board', y, x])));
+					cellTouch.addEventListener ('mousedown', (function __lambda__ (aCell) {
+						return (function __lambda__ () {
+							return self.mouseClick (aCell);
+						});
+					}) (tuple (['board', y, x])));
+				}
+				else {
+					cellTouch.className = 'notouch';
+				}
+				rowTouch.appendChild (cellTouch);
 				if (__in__ (mapObj [x] [y], OUTSIDEDECOMAPPING)) {
 					mapSurf += OUTSIDEDECOMAPPING [mapObj [x] [y]];
 					cellInner += OUTSIDEDECOMAPPING [mapObj [x] [y]];

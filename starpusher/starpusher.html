@@ -4,6 +4,29 @@
 -->
 <link href="https://fonts.googleapis.com/css?family=Luckiest+Guy|Wendy+One&display=swap" rel="stylesheet"> 
 <style>
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+}
+
+.button1 {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+.button2:hover {
+  box-shadow: 0 2px 6px 0 rgba(0,0,0,0.24),0 7px 20px 0 rgba(0,0,0,0.19);
+}
+
 .fontWendy {font-family: 'Wendy One', serif;}
 .fontAnton {font-family: 'Anton', serif;}
 .fontBarriecito {font-family: 'Barriecito', serif;}
@@ -11,7 +34,7 @@
 .fontLGuy {font-family: 'Luckiest Guy', serif;}
 .fontSaira {font-family: 'Saira Stencil One', serif;}
 .fontSquada {font-family: 'Squada One', serif;}
-.fontDecoration {
+.fontDecoration, a {
   font-size: 24px;  
   color:white;
   text-shadow:       
@@ -44,8 +67,9 @@ div.over {
 img.over {
   margin-left: -50px;
 }
-0img {
-  margin-left: -4px;
+img {
+  0margin-left: -4px;
+  pointer-events:none;
 }
 #board {
     position: relative;
@@ -62,11 +86,51 @@ body {
 .blueback {
   background: rgb(0,170,255);
 }
-div.inner {
+
+.touch, .notouch {
+  display:inline-block;
+  width:50px;
+  height:40px;
+  background-color:#00000000;
+  margin-bottom:20px;
+  0margin-left:-4px;
+  z-index:500;
+}
+
+.touch:hover {
+ background-color:#00000022;
+}
+
+.touch-up {
+  margin-top: -60px;
+  white-space:nowrap;
+}
+
+#endSplash, {
+  z-index:999;
+  position:absolute;
+  display:none;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background-color:#00000022;
+}
+
+.inner {
     position: absolute;
     top: 50%; left: 50%;
     transform: translate(-50%,-50%);
     padding: 2rem;
+    background-color:#00000000;
+}
+
+.inner2 {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    padding: 2rem;
+    background-color:#00000055;
 }
 
 </style>
@@ -74,12 +138,42 @@ div.inner {
 <body>
 <script type="module">import * as starpusher from './__target__/starpusher.js'; window.starpusher = starpusher;</script>
 <div id="info" class="fontDecoration fontWendy blueback">
-Push the stars over the marks. 
-P to change character.
-Backspace to reset level, Esc to quit.
+Push the stars over the marks.<br> 
+Arrow keys or mouse or touch to move.
+U to undo last move.
+P or mouse or touch to change character.
 N for next level, B to go back a level.
-Arrow keys to move. U for undo.</div>
+</div>
+<button onclick="toggle()" class="fontWendy button2" style="font-size:18px;margin-bottom:20px;">
+?</button>
+<script>
+function toggle() {
+  var x = document.getElementById("infoSplash");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+    x.focus();
+  } else {
+    x.style.display = "none";
+  }
+}
+</script>
 <div id="board"></div>
+<div id="endSplash" style="display:none"><div class="inner"><img src="pic/star_solved.png">
+<div id="counter" class="fontDecoration2 fontLGuy" style="margin:10px;text-align:center;">Steps: ???&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Time: ???</div>
+</div></div>
+
+<div id="infoSplash" onclick="toggle()" onkeydown="toggle()" class="inner2" style="display:none">
+<div class="fontDecoration fontWendy" style="margin:10px;text-align:left;">
+Original code comes form: <a href='https://inventwithpython.com/pygame/chapter9.html' target="_blank">https://inventwithpython.com/pygame/chapter9.html</a><br>
+<br>
+Improvements:<br>
+- multistep Undo<br>
+- time counter<br>
+- character control with mouse or touch<br>
+- web version<br>
+-&nbsp;adjustmenst&nbsp;for&nbsp;JS&nbsp;compiler&nbsp;(<a href='http://transcrypt.org/' target="_blank">transcrypt.org</a>)<br>
+ </div></div>
+
 <img style="display:none" src="pic/RedSelector.png">
 <img style="display:none" src="pic/Selector.png">
 <img style="display:none" src="pic/Star.png">
