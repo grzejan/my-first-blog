@@ -94,7 +94,7 @@ class Starpusher:
         
         win.addEventListener ('keydown', self.keydown)
         win.addEventListener ('keyup', self.keyup)
-        html.body.addEventListener ('touchstart', lambda event: event.preventDefault ())
+        # html.body.addEventListener ('touchstart', lambda event: event.preventDefault ())
         html.body.addEventListener ('mousedown', lambda event: event.preventDefault ())
         # win.setInterval (self.update, 1500)    # Install update callback, time in ms
 
@@ -129,7 +129,7 @@ class Starpusher:
         # html.body.appendChild (self.board)
         self.board = html.getElementById ('board')
         self.endSplash = html.getElementById ('endSplash')
-        self.endSplash.addEventListener ('touchstart', (lambda aCell: lambda: self.mouseClick (aCell)) (('next', -1, -1)))  # Returns inner lambda
+        # self.endSplash.addEventListener ('touchstart', (lambda aCell: lambda: self.mouseClick (aCell)) (('next', -1, -1)))  # Returns inner lambda
         self.endSplash.addEventListener ('mousedown', (lambda aCell: lambda: self.mouseClick (aCell)) (('next', -1, -1)))
         # self.board.style.margin = '80px 0 0 40px' # top right bottom left
         # self.board.innerHTML=mapSurf
@@ -575,7 +575,7 @@ class Starpusher:
                 cellTouch = html.createElement('div')
                 if (mapObj[x][y]=='o'):
                     cellTouch.className='touch'
-                    cellTouch.addEventListener ('touchstart', (lambda aCell: lambda: self.mouseClick (aCell)) (('board', y, x)))  # Returns inner lambda
+                    # cellTouch.addEventListener ('touchstart', (lambda aCell: lambda: self.mouseClick (aCell)) (('board', y, x)))  # Returns inner lambda
                     cellTouch.addEventListener ('mousedown', (lambda aCell: lambda: self.mouseClick (aCell)) (('board', y, x)))
                 else:
                     cellTouch.className='notouch'

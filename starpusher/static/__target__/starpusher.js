@@ -1,4 +1,4 @@
-// Transcrypt'ed from Python, 2019-09-24 21:57:46
+// Transcrypt'ed from Python, 2019-09-27 12:55:54
 var random = {};
 var sys = {};
 var time = {};
@@ -60,9 +60,6 @@ export var Starpusher =  __class__ ('Starpusher', [object], {
 		self.keyCode = null;
 		win.addEventListener ('keydown', self.keydown);
 		win.addEventListener ('keyup', self.keyup);
-		html.body.addEventListener ('touchstart', (function __lambda__ (event) {
-			return event.preventDefault ();
-		}));
 		html.body.addEventListener ('mousedown', (function __lambda__ (event) {
 			return event.preventDefault ();
 		}));
@@ -70,11 +67,6 @@ export var Starpusher =  __class__ ('Starpusher', [object], {
 		print ('Levels:' + len (self.levels));
 		self.board = html.getElementById ('board');
 		self.endSplash = html.getElementById ('endSplash');
-		self.endSplash.addEventListener ('touchstart', (function __lambda__ (aCell) {
-			return (function __lambda__ () {
-				return self.mouseClick (aCell);
-			});
-		}) (tuple (['next', -(1), -(1)])));
 		self.endSplash.addEventListener ('mousedown', (function __lambda__ (aCell) {
 			return (function __lambda__ () {
 				return self.mouseClick (aCell);
@@ -456,11 +448,6 @@ export var Starpusher =  __class__ ('Starpusher', [object], {
 				var cellTouch = html.createElement ('div');
 				if (mapObj [x] [y] == 'o') {
 					cellTouch.className = 'touch';
-					cellTouch.addEventListener ('touchstart', (function __lambda__ (aCell) {
-						return (function __lambda__ () {
-							return self.mouseClick (aCell);
-						});
-					}) (tuple (['board', y, x])));
 					cellTouch.addEventListener ('mousedown', (function __lambda__ (aCell) {
 						return (function __lambda__ () {
 							return self.mouseClick (aCell);
