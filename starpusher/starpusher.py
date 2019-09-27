@@ -192,31 +192,31 @@ class Starpusher:
             if(playerX>x):
                 t=0
                 while (x < playerX) and (gameEvent!='levelCompleted'):
-                    # gameEvent=self.handleUserAction('left')
-                    self.jsMoveEvents.append(win.setTimeout((lambda gameEvent: lambda: self.handleUserAction (gameEvent)) ('left'), t))
-                    t+=PAUSE_MS
+                    gameEvent=self.handleUserAction('left')
+                    # self.jsMoveEvents.append(win.setTimeout((lambda gameEvent: lambda: self.handleUserAction (gameEvent)) ('left'), t))
+                    # t+=PAUSE_MS
                     x += 1
             elif(playerX<x):
                 t=0
                 while (x > playerX) and (gameEvent!='levelCompleted'):
-                    # gameEvent=self.handleUserAction('right')
-                    self.jsMoveEvents.append(win.setTimeout((lambda gameEvent: lambda: self.handleUserAction (gameEvent)) ('right'), t))
-                    t+=PAUSE_MS
+                    gameEvent=self.handleUserAction('right')
+                    # self.jsMoveEvents.append(win.setTimeout((lambda gameEvent: lambda: self.handleUserAction (gameEvent)) ('right'), t))
+                    # t+=PAUSE_MS
                     x -= 1
         elif (playerX==x):
             if(playerY>y):
                 t=0
                 while (y < playerY) and (gameEvent!='levelCompleted'):
-                    # gameEvent=self.handleUserAction('up')
-                    self.jsMoveEvents.append(win.setTimeout((lambda gameEvent: lambda: self.handleUserAction (gameEvent)) ('up'), t))
-                    t+=PAUSE_MS
+                    gameEvent=self.handleUserAction('up')
+                    # self.jsMoveEvents.append(win.setTimeout((lambda gameEvent: lambda: self.handleUserAction (gameEvent)) ('up'), t))
+                    # t+=PAUSE_MS
                     y += 1
             elif(playerY<y):
                 t=0
                 while (y > playerY) and (gameEvent!='levelCompleted'):
-                    # gameEvent=self.handleUserAction('down')
-                    self.jsMoveEvents.append(win.setTimeout((lambda gameEvent: lambda: self.handleUserAction (gameEvent)) ('down'), t))
-                    t+=PAUSE_MS
+                    gameEvent=self.handleUserAction('down')
+                    # self.jsMoveEvents.append(win.setTimeout((lambda gameEvent: lambda: self.handleUserAction (gameEvent)) ('down'), t))
+                    # t+=PAUSE_MS
                     y -= 1
 
     def keydown (self, event):

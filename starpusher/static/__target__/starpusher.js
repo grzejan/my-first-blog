@@ -1,4 +1,4 @@
-// Transcrypt'ed from Python, 2019-09-27 12:55:54
+// Transcrypt'ed from Python, 2019-09-27 13:06:18
 var random = {};
 var sys = {};
 var time = {};
@@ -128,24 +128,14 @@ export var Starpusher =  __class__ ('Starpusher', [object], {
 			if (playerX > x) {
 				var t = 0;
 				while (x < playerX && gameEvent != 'levelCompleted') {
-					self.jsMoveEvents.append (win.setTimeout ((function __lambda__ (gameEvent) {
-						return (function __lambda__ () {
-							return self.handleUserAction (gameEvent);
-						});
-					}) ('left'), t));
-					t += PAUSE_MS;
+					var gameEvent = self.handleUserAction ('left');
 					x++;
 				}
 			}
 			else if (playerX < x) {
 				var t = 0;
 				while (x > playerX && gameEvent != 'levelCompleted') {
-					self.jsMoveEvents.append (win.setTimeout ((function __lambda__ (gameEvent) {
-						return (function __lambda__ () {
-							return self.handleUserAction (gameEvent);
-						});
-					}) ('right'), t));
-					t += PAUSE_MS;
+					var gameEvent = self.handleUserAction ('right');
 					x--;
 				}
 			}
@@ -154,24 +144,14 @@ export var Starpusher =  __class__ ('Starpusher', [object], {
 			if (playerY > y) {
 				var t = 0;
 				while (y < playerY && gameEvent != 'levelCompleted') {
-					self.jsMoveEvents.append (win.setTimeout ((function __lambda__ (gameEvent) {
-						return (function __lambda__ () {
-							return self.handleUserAction (gameEvent);
-						});
-					}) ('up'), t));
-					t += PAUSE_MS;
+					var gameEvent = self.handleUserAction ('up');
 					y++;
 				}
 			}
 			else if (playerY < y) {
 				var t = 0;
 				while (y > playerY && gameEvent != 'levelCompleted') {
-					self.jsMoveEvents.append (win.setTimeout ((function __lambda__ (gameEvent) {
-						return (function __lambda__ () {
-							return self.handleUserAction (gameEvent);
-						});
-					}) ('down'), t));
-					t += PAUSE_MS;
+					var gameEvent = self.handleUserAction ('down');
 					y--;
 				}
 			}
